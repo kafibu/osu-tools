@@ -129,7 +129,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                 new ObjectInspectorDifficultyValue("Lazy Jump Distance", hitObject.LazyJumpDistance),
                 new ObjectInspectorDifficultyValue("Min Jump Dist", hitObject.MinimumJumpDistance),                    
                 new ObjectInspectorDifficultyValue("Min Jump Time", hitObject.MinimumJumpTime),
-                new ObjectInspectorDifficultyValue("Velocity", hitObject.Index > 1 ? AimEvaluator.VelocityEvaluator(hitObject, hitObjectLast, true):0),
+                new ObjectInspectorDifficultyValue("Velocity", hitObjectLast is not null ? AimEvaluator.VelocityEvaluator(hitObject, hitObjectLast, true):0),
                 new ObjectInspectorDifficultyValue("Aim Difficulty", AimEvaluator.EvaluateDifficultyOf(hitObject, true)),
                 new ObjectInspectorDifficultyValue("Speed Difficulty", SpeedEvaluator.EvaluateDifficultyOf(hitObject)),
                 new ObjectInspectorDifficultyValue("Rhythm Diff", RhythmEvaluator.EvaluateDifficultyOf(hitObject)),
@@ -161,7 +161,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                     new ObjectInspectorDifficultyValue("Travel Distance", hitObject.TravelDistance),
                 });
             }
-            if (hitObject.Index > 1)
+            if (hitObjectLast is not null)
             {
             if (hitObjectLast.BaseObject is Slider)
             {
