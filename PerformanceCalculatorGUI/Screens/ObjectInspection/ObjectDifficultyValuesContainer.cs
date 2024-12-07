@@ -145,6 +145,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                     new ObjectInspectorDifficultyValue("Acute angle bonus", AimEvaluator.calcAcuteAngleBonus(hitObject.Angle.Value)),
                 });
             }
+
             if (hitObject.BaseObject is Slider)
             {
                 flowContainer.AddRange(new Drawable[]
