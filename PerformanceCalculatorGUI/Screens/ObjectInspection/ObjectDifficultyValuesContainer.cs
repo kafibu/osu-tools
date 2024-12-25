@@ -143,8 +143,8 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                 flowContainer.AddRange(new Drawable[]
                 {
                     new ObjectInspectorDifficultyValue("Angle", double.RadiansToDegrees(hitObject.Angle.Value)),
-                    new ObjectInspectorDifficultyValue("Wide Angle Bonus", AimEvaluator.calcWideAngleBonus(hitObject.Angle.Value)),
-                    new ObjectInspectorDifficultyValue("Acute angle bonus", AimEvaluator.calcAcuteAngleBonus(hitObject.Angle.Value)),
+                    new ObjectInspectorDifficultyValue("Wide Angle Bonus", AimEvaluator.CalcWideAngleBonus(hitObject.Angle.Value)),
+                    new ObjectInspectorDifficultyValue("Acute angle bonus", AimEvaluator.CalcAcuteAngleBonus(hitObject.Angle.Value)),
                 });
             }
 
