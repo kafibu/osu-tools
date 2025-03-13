@@ -129,6 +129,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
         {
             bool hidden = appliedMods.Value.Any(x => x is ModHidden);
             var hitObjectLast = (OsuDifficultyHitObject)hitObject.Previous(0);
+            var hitObjectLastLast = (OsuDifficultyHitObject)hitObject.Previous(1);
             flowContainer.AddRange(new[]
             {
                 new ObjectInspectorDifficultyValue("Position", (hitObject.BaseObject as OsuHitObject)!.StackedPosition),
@@ -138,6 +139,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                 new ObjectInspectorDifficultyValue("Min Jump Dist", hitObject.MinimumJumpDistance),
                 new ObjectInspectorDifficultyValue("Min Jump Time", hitObject.MinimumJumpTime),
                 new ObjectInspectorDifficultyValue("Velocity", hitObject.Index > 1 ? AimEvaluator.VelocityEvaluator(hitObject, hitObjectLast, true):0),
+                new ObjectInspectorDifficultyValue("Velocity Change Bonus", hitObject.Index > 1 ? AimEvaluator.VelocityChangeBonus(hitObject, hitObjectLast, hitObjectLastLast):0),
 
                 new ObjectInspectorDifficultyValue("Aim Difficulty", AimEvaluator.EvaluateDifficultyOf(hitObject, true)),
                 new ObjectInspectorDifficultyValue("Aim Difficulty (w/o sliders)", AimEvaluator.EvaluateDifficultyOf(hitObject, false)),
