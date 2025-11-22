@@ -133,6 +133,8 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
             flowContainer.AddRange(new[]
             {
                 new ObjectInspectorDifficultyValue("Position", (hitObject.BaseObject as OsuHitObject)!.StackedPosition),
+                new ObjectInspectorDifficultyValue("Index", hitObject.Index),
+                new ObjectInspectorDifficultyValue("Hit Window Great", hitObject.HitWindowGreat),
                 new ObjectInspectorDifficultyValue("Strain Time", hitObject.StrainTime),
                 new ObjectInspectorDifficultyValue("Doubletapness", hitObject.GetDoubletapness((OsuDifficultyHitObject)hitObject.Next(0))),
                 new ObjectInspectorDifficultyValue("Lazy Jump Dist", hitObject.LazyJumpDistance),
