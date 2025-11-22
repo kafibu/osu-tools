@@ -13,6 +13,7 @@ using osu.Framework.Graphics.Sprites;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Overlays;
+using osu.Game.Rulesets.Catch.Difficulty.Evaluators;
 using osu.Game.Rulesets.Catch.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Difficulty.Preprocessing;
 using osu.Game.Rulesets.Mods;
@@ -135,7 +136,8 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                 new ObjectInspectorDifficultyValue("Position", (hitObject.BaseObject as OsuHitObject)!.StackedPosition),
                 new ObjectInspectorDifficultyValue("Index", hitObject.Index),
                 new ObjectInspectorDifficultyValue("Hit Window Great", hitObject.HitWindowGreat),
-                new ObjectInspectorDifficultyValue("Strain Time", hitObject.StrainTime),
+                new ObjectInspectorDifficultyValue("Delta Time", hitObject.DeltaTime),
+                new ObjectInspectorDifficultyValue("Adjusted Delta Time", hitObject.AdjustedDeltaTime),
                 new ObjectInspectorDifficultyValue("Doubletapness", hitObject.GetDoubletapness((OsuDifficultyHitObject)hitObject.Next(0))),
                 new ObjectInspectorDifficultyValue("Lazy Jump Dist", hitObject.LazyJumpDistance),
                 new ObjectInspectorDifficultyValue("Min Jump Dist", hitObject.MinimumJumpDistance),
@@ -171,8 +173,13 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                         Alpha = 0.5f
                     },
                     new ObjectInspectorDifficultyValue("Travel Time", hitObject.TravelTime),
+                    new ObjectInspectorDifficultyValue("Lazy Travel Time", hitObject.LazyTravelTime),
                     new ObjectInspectorDifficultyValue("Travel Distance", hitObject.TravelDistance),
+                    new ObjectInspectorDifficultyValue("Lazy Travel Distance", hitObject.LazyTravelDistance)
                 });
+
+                if (hitObject.LazyEndPosition != null)
+                    flowContainer.Add(new ObjectInspectorDifficultyValue("Lazy End Position", hitObject.LazyEndPosition!.Value));
             }
             if (hitObject.Index > 1)
             {
@@ -224,7 +231,15 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
             flowContainer.AddRange(new[]
             {
                 new ObjectInspectorDifficultyValue("Strain Time", hitObject.StrainTime),
-                new ObjectInspectorDifficultyValue("Normalized Position", hitObject.NormalizedPosition)
+                new ObjectInspectorDifficultyValue("Normalized Position", hitObject.NormalizedPosition),
+                new ObjectInspectorDifficultyValue("Last Normalized Position", hitObject.LastNormalizedPosition),
+                new ObjectInspectorDifficultyValue("Player Position", hitObject.PlayerPosition),
+                new ObjectInspectorDifficultyValue("Last Player Position", hitObject.LastPlayerPosition),
+                new ObjectInspectorDifficultyValue("Distance Moved", hitObject.DistanceMoved),
+                new ObjectInspectorDifficultyValue("Exact Distance Moved", hitObject.ExactDistanceMoved),
+
+                // see https://github.com/ppy/osu/blob/a08f7327b11977f1de57b8a177bf26918ebfacda/osu.Game.Rulesets.Catch/Difficulty/Skills/Movement.cs#L36
+                new ObjectInspectorDifficultyValue("Movement Difficulty", MovementEvaluator.EvaluateDifficultyOf(hitObject, track.Rate)),
             });
         }
     }
