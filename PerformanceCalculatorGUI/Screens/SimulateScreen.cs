@@ -44,76 +44,76 @@ namespace PerformanceCalculatorGUI.Screens
 {
     public partial class SimulateScreen : PerformanceCalculatorScreen
     {
-        private ProcessorWorkingBeatmap working;
+        private ProcessorWorkingBeatmap? working;
 
-        private ExtendedUserModSelectOverlay userModsSelectOverlay;
+        private ExtendedUserModSelectOverlay userModsSelectOverlay = null!;
 
-        private GridContainer beatmapImportContainer;
-        private LabelledTextBox beatmapFileTextBox;
-        private LabelledTextBox beatmapIdTextBox;
-        private SwitchButton beatmapImportTypeSwitch;
+        private GridContainer beatmapImportContainer = null!;
+        private LabelledTextBox beatmapFileTextBox = null!;
+        private LabelledTextBox beatmapIdTextBox = null!;
+        private SwitchButton beatmapImportTypeSwitch = null!;
 
-        private GridContainer missesContainer;
-        private LimitedLabelledNumberBox missesTextBox;
-        private LimitedLabelledNumberBox largeTickMissesTextBox;
-        private LimitedLabelledNumberBox sliderTailMissesTextBox;
-        private LimitedLabelledNumberBox comboTextBox;
-        private LimitedLabelledNumberBox scoreTextBox;
+        private GridContainer missesContainer = null!;
+        private LimitedLabelledNumberBox missesTextBox = null!;
+        private LimitedLabelledNumberBox largeTickMissesTextBox = null!;
+        private LimitedLabelledNumberBox sliderTailMissesTextBox = null!;
+        private LimitedLabelledNumberBox comboTextBox = null!;
+        private LimitedLabelledNumberBox scoreTextBox = null!;
 
-        private LabelledNumberBox scoreIdTextBox;
-        private StatefulButton scoreIdPopulateButton;
+        private LabelledNumberBox scoreIdTextBox = null!;
+        private StatefulButton scoreIdPopulateButton = null!;
 
-        private GridContainer accuracyContainer;
-        private LimitedLabelledFractionalNumberBox accuracyTextBox;
-        private LimitedLabelledNumberBox goodsTextBox;
-        private LimitedLabelledNumberBox mehsTextBox;
-        private SwitchButton fullScoreDataSwitch;
+        private GridContainer accuracyContainer = null!;
+        private LimitedLabelledFractionalNumberBox accuracyTextBox = null!;
+        private LimitedLabelledNumberBox goodsTextBox = null!;
+        private LimitedLabelledNumberBox mehsTextBox = null!;
+        private SwitchButton fullScoreDataSwitch = null!;
 
-        private DifficultyAttributes difficultyAttributes;
-        private AttributesTable difficultyAttributesContainer;
+        private DifficultyAttributes? difficultyAttributes;
+        private AttributesTable difficultyAttributesContainer = null!;
 
-        private PerformanceCalculator performanceCalculator;
-        private AttributesTable performanceAttributesContainer;
+        private PerformanceCalculator? performanceCalculator;
+        private AttributesTable performanceAttributesContainer = null!;
 
         [Cached]
-        private Bindable<DifficultyCalculator> difficultyCalculator = new Bindable<DifficultyCalculator>();
+        private Bindable<DifficultyCalculator?> difficultyCalculator = new Bindable<DifficultyCalculator?>();
 
-        private FillFlowContainer beatmapDataContainer;
-        private Container beatmapTitle;
+        private FillFlowContainer beatmapDataContainer = null!;
+        private Container beatmapTitle = null!;
 
-        private ModDisplay modDisplay;
+        private ModDisplay modDisplay = null!;
 
-        private StrainVisualizer strainVisualizer;
+        private StrainVisualizer strainVisualizer = null!;
 
-        private ObjectInspector objectInspector;
+        private ObjectInspector? objectInspector;
 
-        private BufferedContainer background;
+        private BufferedContainer? background;
 
-        private ScheduledDelegate debouncedPerformanceUpdate;
-
-        [Resolved]
-        private NotificationDisplay notificationDisplay { get; set; }
+        private ScheduledDelegate? debouncedPerformanceUpdate;
 
         [Resolved]
-        private AudioManager audio { get; set; }
+        private NotificationDisplay notificationDisplay { get; set; } = null!;
 
         [Resolved]
-        private Bindable<IReadOnlyList<Mod>> appliedMods { get; set; }
+        private AudioManager audio { get; set; } = null!;
 
         [Resolved]
-        private Bindable<RulesetInfo> ruleset { get; set; }
+        private Bindable<IReadOnlyList<Mod>> appliedMods { get; set; } = null!;
 
         [Resolved]
-        private RulesetStore rulesets { get; set; }
+        private Bindable<RulesetInfo> ruleset { get; set; } = null!;
 
         [Resolved]
-        private LargeTextureStore textures { get; set; }
+        private RulesetStore rulesets { get; set; } = null!;
 
         [Resolved]
-        private SettingsManager configManager { get; set; }
+        private LargeTextureStore textures { get; set; } = null!;
 
         [Resolved]
-        private APIManager apiManager { get; set; }
+        private SettingsManager configManager { get; set; } = null!;
+
+        [Resolved]
+        private APIManager apiManager { get; set; } = null!;
 
         [Cached]
         private OverlayColourProvider colourProvider = new OverlayColourProvider(OverlayColourScheme.Blue);
@@ -122,6 +122,9 @@ namespace PerformanceCalculatorGUI.Screens
 
         [GeneratedRegex(@"osu\.ppy\.sh/(?:b|beatmapsets/\d+#\w+|beatmaps)/(\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
         private partial Regex beatmapLinkRegex();
+
+        private int? queuedBeatmap;
+        private ulong? queuedScore;
 
         private const int file_selection_container_height = 40;
         private const int map_title_container_height = 40;
@@ -132,11 +135,24 @@ namespace PerformanceCalculatorGUI.Screens
             RelativeSizeAxes = Axes.Both;
         }
 
+        public SimulateScreen(int beatmapId, ulong? scoreId = null)
+        {
+            RelativeSizeAxes = Axes.Both;
+            queuedBeatmap = beatmapId;
+            queuedScore = scoreId;
+        }
+
         [BackgroundDependencyLoader]
         private void load(OsuColour osuColour)
         {
             InternalChildren = new Drawable[]
             {
+                new Box
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Colour = colourProvider.Background6,
+                    Alpha = 0.85f
+                },
                 new GridContainer
                 {
                     RelativeSizeAxes = Axes.Both,
@@ -172,7 +188,8 @@ namespace PerformanceCalculatorGUI.Screens
                                             Label = "Beatmap ID",
                                             FixedLabelWidth = 100f,
                                             PlaceholderText = "Enter a beatmap ID or link",
-                                            CommitOnFocusLoss = false
+                                            CommitOnFocusLoss = false,
+                                            SelectAllOnFocus = true
                                         },
                                         beatmapImportTypeSwitch = new SwitchButton
                                         {
@@ -243,7 +260,7 @@ namespace PerformanceCalculatorGUI.Screens
                                                             {
                                                                 if (!string.IsNullOrEmpty(scoreIdTextBox.Current.Value))
                                                                 {
-                                                                    populateSettingsFromScore(long.Parse(scoreIdTextBox.Current.Value));
+                                                                    populateSettingsFromScore(ulong.Parse(scoreIdTextBox.Current.Value));
                                                                 }
                                                                 else
                                                                 {
@@ -460,14 +477,17 @@ namespace PerformanceCalculatorGUI.Screens
                                                         if (objectInspector is not null)
                                                             RemoveInternal(objectInspector, true);
 
-                                                        AddInternal(objectInspector = new ObjectInspector(working)
+                                                        if (working != null)
                                                         {
-                                                            RelativeSizeAxes = Axes.Both,
-                                                            Anchor = Anchor.Centre,
-                                                            Origin = Anchor.Centre,
-                                                            Size = new Vector2(0.95f)
-                                                        });
-                                                        objectInspector.Show();
+                                                            AddInternal(objectInspector = new ObjectInspector(working)
+                                                            {
+                                                                RelativeSizeAxes = Axes.Both,
+                                                                Anchor = Anchor.Centre,
+                                                                Origin = Anchor.Centre,
+                                                                Size = new Vector2(0.95f)
+                                                            });
+                                                            objectInspector.Show();
+                                                        }
                                                     }
                                                 }
                                             }
@@ -537,6 +557,25 @@ namespace PerformanceCalculatorGUI.Screens
             }
         }
 
+        protected override void LoadComplete()
+        {
+            base.LoadComplete();
+
+            if (queuedScore != null)
+            {
+                populateSettingsFromScore(queuedScore.Value);
+                scoreIdTextBox.Text = queuedScore.Value.ToString();
+            }
+            else if (queuedBeatmap != null)
+            {
+                changeBeatmap(queuedBeatmap.Value.ToString());
+                beatmapIdTextBox.Text = queuedBeatmap.Value.ToString();
+            }
+
+            queuedScore = null;
+            queuedBeatmap = null;
+        }
+
         protected override void Dispose(bool isDisposing)
         {
             modSettingChangeTracker?.Dispose();
@@ -548,8 +587,8 @@ namespace PerformanceCalculatorGUI.Screens
             base.Dispose(isDisposing);
         }
 
-        private ModSettingChangeTracker modSettingChangeTracker;
-        private ScheduledDelegate debouncedStatisticsUpdate;
+        private ModSettingChangeTracker? modSettingChangeTracker;
+        private ScheduledDelegate? debouncedStatisticsUpdate;
 
         private void modsChanged(ValueChangedEvent<IReadOnlyList<Mod>> mods)
         {
@@ -933,7 +972,7 @@ namespace PerformanceCalculatorGUI.Screens
                 RemoveInternal(background, true);
             }
 
-            if (working.BeatmapInfo?.BeatmapSet?.OnlineID is not null)
+            if (working?.BeatmapInfo?.BeatmapSet?.OnlineID is not null)
             {
                 LoadComponentAsync(background = new BufferedContainer
                 {
@@ -950,12 +989,6 @@ namespace PerformanceCalculatorGUI.Screens
                             Origin = Anchor.Centre,
                             FillMode = FillMode.Fill
                         },
-                        new Box
-                        {
-                            RelativeSizeAxes = Axes.Both,
-                            Colour = OsuColour.Gray(0),
-                            Alpha = 0.85f
-                        },
                     }
                 }).ContinueWith(_ =>
                 {
@@ -967,11 +1000,11 @@ namespace PerformanceCalculatorGUI.Screens
             }
         }
 
-        private void showError(Exception e)
+        private void showError(Exception? e)
         {
-            Logger.Log(e.ToString(), level: LogLevel.Error);
+            Logger.Log(e?.ToString(), level: LogLevel.Error);
 
-            string message = e is AggregateException aggregateException ? aggregateException.Flatten().Message : e.Message;
+            string message = e is AggregateException aggregateException ? aggregateException.Flatten().Message : e?.Message ?? "Unknown error";
             showError(message, false);
         }
 
@@ -985,7 +1018,7 @@ namespace PerformanceCalculatorGUI.Screens
 
         private long? legacyTotalScore;
 
-        private void populateSettingsFromScore(long scoreId)
+        private void populateSettingsFromScore(ulong scoreId)
         {
             if (scoreIdPopulateButton.State.Value == ButtonState.Loading)
                 return;
@@ -998,13 +1031,13 @@ namespace PerformanceCalculatorGUI.Screens
 
                 Schedule(() =>
                 {
-                    if (scoreInfo.BeatmapID != working.BeatmapInfo.OnlineID)
+                    if (scoreInfo.BeatmapID != working?.BeatmapInfo.OnlineID)
                     {
                         beatmapIdTextBox.Text = string.Empty;
                         changeBeatmap(scoreInfo.BeatmapID.ToString());
                     }
 
-                    ruleset.Value = rulesets.GetRuleset(scoreInfo.RulesetID);
+                    ruleset.Value = rulesets.GetRuleset(scoreInfo.RulesetID)!;
                     appliedMods.Value = scoreInfo.Mods.Select(x => x.ToMod(ruleset.Value.CreateInstance())).ToList();
 
                     legacyTotalScore = scoreInfo.LegacyTotalScore;
