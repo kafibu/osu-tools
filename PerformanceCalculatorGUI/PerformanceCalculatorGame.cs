@@ -92,11 +92,6 @@ namespace PerformanceCalculatorGUI
                     tabletInputHandler.Enabled.Value = false;
                 }
             }
-
-            if (tabletInputHandler != null)
-            {
-                tabletInputHandler.Enabled.Value = false;
-            }
         }
 
         protected override void LoadComplete()
