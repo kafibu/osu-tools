@@ -82,13 +82,16 @@ namespace PerformanceCalculatorGUI
 
             foreach (var handler in host.AvailableInputHandlers)
             {
-                if (handler is MouseHandler mouseHandler)
+                if (handler is MouseHandler mouseHandler && mouseHandler.UseRelativeMode.Value)
                 {
                     mouseHandler.UseRelativeMode.Value = false;
                 }
-            }
 
-            var tabletInputHandler = host.AvailableInputHandlers.FirstOrDefault(x => x is OpenTabletDriverHandler && x.IsActive);
+                if (handler is OpenTabletDriverHandler tabletInputHandler && tabletInputHandler.IsActive)
+                {
+                    tabletInputHandler.Enabled.Value = false;
+                }
+            }
 
             if (tabletInputHandler != null)
             {
