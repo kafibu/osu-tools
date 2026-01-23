@@ -8,6 +8,7 @@ using osu.Framework.Allocation;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
+using osu.Framework.Input.Handlers.Mouse;
 using osu.Framework.Input.Handlers.Tablet;
 using osu.Framework.Platform;
 using osu.Game;
@@ -78,6 +79,14 @@ namespace PerformanceCalculatorGUI
             base.SetHost(host);
 
             host.Window.CursorState |= CursorState.Hidden;
+
+            foreach (var handler in host.AvailableInputHandlers)
+            {
+                if (handler is MouseHandler mouseHandler)
+                {
+                    mouseHandler.UseRelativeMode.Value = false;
+                }
+            }
 
             var tabletInputHandler = host.AvailableInputHandlers.FirstOrDefault(x => x is OpenTabletDriverHandler && x.IsActive);
 
