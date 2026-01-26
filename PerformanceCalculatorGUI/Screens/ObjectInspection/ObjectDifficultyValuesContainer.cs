@@ -147,6 +147,9 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                 new ObjectInspectorDifficultyValue("Velocity Change Bonus", hitObject.Index > 1 ? AimEvaluator.VelocityChangeBonus(hitObject, hitObjectLast, hitObjectLastLast)*0.75:0),
                 new ObjectInspectorDifficultyValue("Angle Repeat Penalty%", hitObject.Angle != null && hitObjectLast.Angle != null ?
                 0.08 + 0.92 * (1 - Math.Min(AimEvaluator.CalcAcuteAngleBonus(hitObject.Angle.Value), Math.Pow(AimEvaluator.CalcAcuteAngleBonus(hitObjectLast.Angle.Value), 3))):0),
+                new ObjectInspectorDifficultyValue("Acute Angle Bonus", hitObject.Angle != null && hitObjectLast.Angle != null && hitObject.Index > 1 ?
+                AimEvaluator.AcuteAngleBonus(hitObject.Angle.Value, hitObjectLast.Angle.Value,
+                Math.Min(AimEvaluator.VelocityEvaluator(hitObject, hitObjectLast, true), AimEvaluator.VelocityEvaluator(hitObjectLast, hitObjectLastLast, true)), hitObject)*2.55:0),
                 new ObjectInspectorDifficultyValue("Aim Difficulty", AimEvaluator.EvaluateDifficultyOf(hitObject, true)),
                 new ObjectInspectorDifficultyValue("Aim Difficulty (w/o sliders)", AimEvaluator.EvaluateDifficultyOf(hitObject, false)),
                 new ObjectInspectorDifficultyValue("Speed Difficulty", SpeedEvaluator.EvaluateDifficultyOf(hitObject, appliedMods.Value)),
