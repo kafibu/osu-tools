@@ -143,13 +143,13 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                 new ObjectInspectorDifficultyValue("Lazy Jump Dist", hitObject.LazyJumpDistance),
                 new ObjectInspectorDifficultyValue("Min Jump Dist", hitObject.MinimumJumpDistance),
                 new ObjectInspectorDifficultyValue("Min Jump Time", hitObject.MinimumJumpTime),
+                new ObjectInspectorDifficultyValue("Speed Difficulty", SpeedEvaluator.EvaluateDifficultyOf(hitObject, appliedMods.Value)),
+                new ObjectInspectorDifficultyValue("Rhythm Diff", osu.Game.Rulesets.Osu.Difficulty.Evaluators.RhythmEvaluator.EvaluateDifficultyOf(hitObject)),
+                new ObjectInspectorDifficultyValue(hidden ? "FLHD Difficulty" : "Flashlight Diff", FlashlightEvaluator.EvaluateDifficultyOf(hitObject, hidden)),
                 new ObjectInspectorDifficultyValue("Velocity", hitObject.Index > 1 ? AimEvaluator.VelocityEvaluator(hitObject, hitObjectLast, true):0),
                 new ObjectInspectorDifficultyValue("Velocity Change Bonus", hitObject.Index > 1 ? AimEvaluator.VelocityChangeBonus(hitObject, hitObjectLast, hitObjectLastLast)*0.75:0),
                 new ObjectInspectorDifficultyValue("Aim Difficulty", AimEvaluator.EvaluateDifficultyOf(hitObject, true)),
                 new ObjectInspectorDifficultyValue("Aim Difficulty (w/o sliders)", AimEvaluator.EvaluateDifficultyOf(hitObject, false)),
-                new ObjectInspectorDifficultyValue("Speed Difficulty", SpeedEvaluator.EvaluateDifficultyOf(hitObject, appliedMods.Value)),
-                new ObjectInspectorDifficultyValue("Rhythm Diff", osu.Game.Rulesets.Osu.Difficulty.Evaluators.RhythmEvaluator.EvaluateDifficultyOf(hitObject)),
-                new ObjectInspectorDifficultyValue(hidden ? "FLHD Difficulty" : "Flashlight Diff", FlashlightEvaluator.EvaluateDifficultyOf(hitObject, hidden)),
             });
             if (hitObject.Angle != null && hitObjectLast.Angle != null)
             {
