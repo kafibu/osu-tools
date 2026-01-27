@@ -159,6 +159,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                     new ObjectInspectorDifficultyValue("Wide Angle Bonus", AimEvaluator.WideAngleBonus(hitObject.Angle.Value, hitObjectLast.Angle.Value, angleBonus, hitObject)*1.55),
                     new ObjectInspectorDifficultyValue("Acute Angle Bonus",AimEvaluator.AcuteAngleBonus(hitObject.Angle.Value, hitObjectLast.Angle.Value, angleBonus, hitObject)*2.55),
                     new ObjectInspectorDifficultyValue("Angle Repeat Penalty%", 0.08 + 0.92 * (1 - Math.Min(AimEvaluator.CalcAcuteAngleBonus(hitObject.Angle.Value), Math.Pow(AimEvaluator.CalcAcuteAngleBonus(hitObjectLast.Angle.Value), 3)))),
+                    new ObjectInspectorDifficultyValue("Wide Repeat Penalty%", 1 - Math.Min(AimEvaluator.CalcWideAngleBonus(hitObject.Angle.Value), Math.Pow(AimEvaluator.CalcWideAngleBonus(hitObjectLast.Angle.Value), 3))),
                     new ObjectInspectorDifficultyValue("Angle Bonus",angleBonus),
                 });
             }
@@ -168,8 +169,8 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                 flowContainer.AddRange(new Drawable[]
                 {
                     new ObjectInspectorDifficultyValue("Angle", double.RadiansToDegrees(hitObject.Angle.Value)),
-                    new ObjectInspectorDifficultyValue("Wide Angle Bonus", AimEvaluator.CalcWideAngleBonus(hitObject.Angle.Value)),
-                    new ObjectInspectorDifficultyValue("Acute angle bonus", AimEvaluator.CalcAcuteAngleBonus(hitObject.Angle.Value)),
+                    new ObjectInspectorDifficultyValue("Wide Angle", AimEvaluator.CalcWideAngleBonus(hitObject.Angle.Value)),
+                    new ObjectInspectorDifficultyValue("Acute Angle", AimEvaluator.CalcAcuteAngleBonus(hitObject.Angle.Value)),
                 });
             }
             if (hitObject.BaseObject is Slider)
