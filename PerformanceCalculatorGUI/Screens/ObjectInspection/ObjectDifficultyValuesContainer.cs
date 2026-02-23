@@ -154,10 +154,11 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
             if (hitObject.Angle != null && hitObjectLast.Angle != null)
             {
                 double angleBonus = Math.Min(AimEvaluator.VelocityEvaluator(hitObject, hitObjectLast, true), AimEvaluator.VelocityEvaluator(hitObjectLast, hitObjectLastLast, true));
+                bool sameRhythm = Math.Max(hitObject.AdjustedDeltaTime, hitObjectLast.AdjustedDeltaTime) < 1.25 * Math.Min(hitObject.AdjustedDeltaTime, hitObjectLast.AdjustedDeltaTime);
                 flowContainer.AddRange(new Drawable[]
                 {
                     new ObjectInspectorDifficultyValue("Wide Angle Bonus", AimEvaluator.WideAngleBonus(hitObject.Angle.Value, hitObjectLast.Angle.Value, angleBonus, hitObject)*1.5),
-                    new ObjectInspectorDifficultyValue("Acute Angle Bonus",AimEvaluator.AcuteAngleBonus(hitObject.Angle.Value, hitObjectLast.Angle.Value, angleBonus, hitObject)*2.55),
+                    new ObjectInspectorDifficultyValue("Acute Angle Bonus", sameRhythm ? AimEvaluator.AcuteAngleBonus(hitObject.Angle.Value, hitObjectLast.Angle.Value, angleBonus, hitObject)*2.55:0),
                     new ObjectInspectorDifficultyValue("Angle Repeat Penalty%", 0.08 + 0.92 * (1 - Math.Min(AimEvaluator.CalcAcuteAngleBonus(hitObject.Angle.Value), Math.Pow(AimEvaluator.CalcAcuteAngleBonus(hitObjectLast.Angle.Value), 3)))),
                     new ObjectInspectorDifficultyValue("Wide Repeat Penalty%", 1 - Math.Min(AimEvaluator.CalcWideAngleBonus(hitObject.Angle.Value), Math.Pow(AimEvaluator.CalcWideAngleBonus(hitObjectLast.Angle.Value), 3))),
                     new ObjectInspectorDifficultyValue("Angle Bonus",angleBonus),
