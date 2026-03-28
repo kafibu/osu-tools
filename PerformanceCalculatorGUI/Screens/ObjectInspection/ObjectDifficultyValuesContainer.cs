@@ -135,6 +135,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
             flowContainer.AddRange(new[]
             {
                 new ObjectInspectorDifficultyValue("Position", (hitObject.BaseObject as OsuHitObject)!.StackedPosition),
+                new ObjectInspectorDifficultyValue("Last", hitObject.Index > 1 ? hitObject.getEndCursorPosition(hitObjectLast):(hitObject.BaseObject as OsuHitObject)!.StackedPosition), //Last Cursor Position
                 new ObjectInspectorDifficultyValue("Index", hitObject.Index),
                 new ObjectInspectorDifficultyValue("Hit Window Great", hitObject.HitWindowGreat),
                 new ObjectInspectorDifficultyValue("Delta Time", hitObject.DeltaTime),
@@ -174,7 +175,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                     new ObjectInspectorDifficultyValue("Acute Angle", AimEvaluator.CalcAcuteAngleBonus(hitObject.Angle.Value)),
                 });
             }
-            if (hitObject.BaseObject is Slider)
+            if (hitObject.BaseObject is Slider slider)
             {
                 flowContainer.AddRange(new Drawable[]
                 {
@@ -185,6 +186,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
                         RelativeSizeAxes = Axes.X,
                         Alpha = 0.5f
                     },
+                    new ObjectInspectorDifficultyValue("Duration", slider.Duration),
                     new ObjectInspectorDifficultyValue("Travel Time", hitObject.TravelTime),
                     new ObjectInspectorDifficultyValue("Lazy Travel Time", hitObject.LazyTravelTime),
                     new ObjectInspectorDifficultyValue("Travel Distance", hitObject.TravelDistance),
