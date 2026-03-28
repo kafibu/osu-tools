@@ -135,7 +135,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
             flowContainer.AddRange(new[]
             {
                 new ObjectInspectorDifficultyValue("Position", (hitObject.BaseObject as OsuHitObject)!.StackedPosition),
-                new ObjectInspectorDifficultyValue("Last", hitObject.Index > 1 ? hitObject.getEndCursorPosition(hitObjectLast):(hitObject.BaseObject as OsuHitObject)!.StackedPosition), //Last Cursor Position
+                new ObjectInspectorDifficultyValue("Last", hitObject.Index > 1 ? hitObject.GetEndCursorPosition(hitObjectLast):(hitObject.BaseObject as OsuHitObject)!.StackedPosition), //Last Cursor Position
                 new ObjectInspectorDifficultyValue("Index", hitObject.Index),
                 new ObjectInspectorDifficultyValue("Hit Window Great", hitObject.HitWindowGreat),
                 new ObjectInspectorDifficultyValue("Delta Time", hitObject.DeltaTime),
