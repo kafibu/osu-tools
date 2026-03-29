@@ -29,14 +29,14 @@ namespace PerformanceCalculatorGUI
         {
             var dictionary = ToDictionary(attributes);
 
-            return string.Join("\n", dictionary.Select(x => $"{x.Key}: {x.Value:N2}"));
+            return string.Join("\n", dictionary.Select(x => $"{x.Key}: {x.Value:N3}"));
         }
 
         public static string ToReadableString(PerformanceAttributes? attributes)
         {
             var dictionary = ToDictionary(attributes);
 
-            return string.Join("\n", dictionary.Select(x => $"{x.Key}: {x.Value:N2}"));
+            return string.Join("\n", dictionary.Select(x => $"{x.Key}: {x.Value:N3}"));
         }
     }
 }

@@ -88,13 +88,13 @@ namespace PerformanceCalculator
 
                 var ppAttributeValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(result.PerformanceAttributes)) ?? new Dictionary<string, object>();
                 foreach (var attrib in ppAttributeValues)
-                    document.Children.Add(FormatDocumentLine(attrib.Key.Humanize().ToLower(CultureInfo.InvariantCulture), FormattableString.Invariant($"{attrib.Value:N2}")));
+                    document.Children.Add(FormatDocumentLine(attrib.Key.Humanize().ToLower(CultureInfo.InvariantCulture), FormattableString.Invariant($"{attrib.Value:N3}")));
 
                 AddSectionHeader(document, "Difficulty attributes");
 
                 var diffAttributeValues = JsonConvert.DeserializeObject<Dictionary<string, object>>(JsonConvert.SerializeObject(result.DifficultyAttributes)) ?? new Dictionary<string, object>();
                 foreach (var attrib in diffAttributeValues)
-                    document.Children.Add(FormatDocumentLine(attrib.Key.Humanize(), FormattableString.Invariant($"{attrib.Value:N2}")));
+                    document.Children.Add(FormatDocumentLine(attrib.Key.Humanize(), FormattableString.Invariant($"{attrib.Value:N3}")));
 
                 OutputDocument(document);
             }

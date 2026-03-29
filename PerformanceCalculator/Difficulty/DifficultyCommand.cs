@@ -104,7 +104,7 @@ namespace PerformanceCalculator.Difficulty
                         // Values
                         grid.Children.Add(new Cell($"{result.BeatmapId} - {result.Beatmap}"));
                         foreach (var column in attributeValues)
-                            grid.Children.Add(new Cell($"{column.Value:N2}") { Align = Align.Right });
+                            grid.Children.Add(new Cell($"{column.Value:N3}") { Align = Align.Right });
 
                         firstResult = false;
                     }

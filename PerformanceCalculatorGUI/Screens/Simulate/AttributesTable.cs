@@ -81,7 +81,7 @@ namespace PerformanceCalculatorGUI.Screens.Simulate
                 Margin = new MarginPadding { Left = 15, Right = 10 },
                 UseFullGlyphHeight = true
             },
-            new ReadonlyOsuTextBox(FormattableString.Invariant($"{value:N2}"), false)
+            new ReadonlyOsuTextBox(FormattableString.Invariant($"{value:N3}"), false)
             {
                 Anchor = Anchor.CentreLeft,
                 Origin = Anchor.CentreLeft,

@@ -25,7 +25,7 @@ namespace PerformanceCalculatorGUI.Screens.ObjectInspection
         public ObjectInspectorDifficultyValue(string label, Vector2 value)
         {
             this.label = label;
-            this.value = $"({value.X:N2}; {value.Y:N2})";
+            this.value = $"({value.X:N3}; {value.Y:N3})";
 
             createLayout();
         }
