@@ -46,20 +46,14 @@ namespace PerformanceCalculatorGUI
             };
         }
 
-        public static int AdjustManiaScore(int score, IReadOnlyList<Mod> mods)
+        public static int AdjustManiaScore(int score, IReadOnlyList<Mod> mods, Ruleset ruleset)
         {
-            if (score != 1000000) return score;
+            if (score != 1000000)
+                return score;
 
-            double scoreMultiplier = 1;
+            var scoreMultiplierCalculator = ruleset.CreateScoreMultiplierCalculator(new ScoreMultiplierContext(new BeatmapDifficulty())); // we don't really care about the beatmap difficulty
 
-            // Cap score depending on difficulty adjustment mods (matters for mania).
-            foreach (var mod in mods)
-            {
-                if (mod.Type == ModType.DifficultyReduction)
-                    scoreMultiplier *= mod.ScoreMultiplier;
-            }
-
-            return (int)Math.Round(1000000 * scoreMultiplier);
+            return (int)Math.Round(1000000 * scoreMultiplierCalculator.CalculateFor(mods));
         }
 
         public static Dictionary<HitResult, int> GenerateHitResultsForRuleset(RulesetInfo ruleset, double accuracy, IBeatmap beatmap, Mod[] mods, int countMiss, int? countMeh, int? countGood, int? countLargeTickMisses, int? countSliderTailMisses)
@@ -180,7 +174,8 @@ namespace PerformanceCalculatorGUI
             else
             {
                 // Let Great=2, Good=1, Miss=0. The total should be this.
-                int targetTotal = (int)Math.Round(accuracy * totalResultCount * 2);
+                int relevantResultCount = totalResultCount - countMiss;
+                int targetTotal = (int)Math.Round(accuracy * relevantResultCount * 2);
 
                 countGreat = targetTotal - (totalResultCount - countMiss);
                 countGood = totalResultCount - countGreat - countMiss;
@@ -209,9 +204,9 @@ namespace PerformanceCalculatorGUI
             // Max value minus whatever misses are left. Negative if impossible missCount
             int countFruits = maxFruits - (countMiss - (maxDroplets - countDroplets));
 
-            // Either given or the max amount of hit objects with respect to accuracy minus the already calculated fruits and drops.
-            // Negative if accuracy not feasable with missCount.
-            int countTinyDroplets = countMeh ?? (int)Math.Round(accuracy * (maxCombo + maxTinyDroplets)) - countFruits - countDroplets;
+            // Either given or the max amount of "hit" hit objects with respect to accuracy minus the already calculated fruits and drops.
+            int relevantResultCount = maxCombo + maxTinyDroplets - countMiss;
+            int countTinyDroplets = countMeh ?? (int)Math.Round(accuracy * relevantResultCount) - countFruits - countDroplets;
 
             // Whatever droplets are left
             int countTinyMisses = maxTinyDroplets - countTinyDroplets;
